@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  version: "0.0.1"
+  title: IDP user API
+  license:
+    name: MIT
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Client:
+      type: object
+      properties:
+        clientId:
+          type: string
+        directAccessGrantsEnabled:
+          type: boolean
+        serviceAccountsEnabled:
+          type: boolean
+        standardFlowEnabled:
+          type: boolean
+        implicitFlowEnabled:
+          type: boolean
+        redirectUris:
+          type: array
+      required:
+        - clientId
+      example:
+        clientId: exampleclient
+        directAccessGrantsEnabled: true
+        serviceAccountsEnabled: true
+        standardFlowEnabled: true
+        implicitFlowEnabled: true
+        redirectUris: ["https://example.com/callback"]
+    ClientWithSecret:
+      type: object
+      properties:
+        clientId:
+          type: string
+        directAccessGrantsEnabled:
+          type: boolean
+        serviceAccountsEnabled:
+          type: boolean
+        standardFlowEnabled:
+          type: boolean
+        implicitFlowEnabled:
+          type: boolean
+        clientSecret:
+          type: string
+      required:
+        - clientId
+        - clientSecret
+    ClientSecret:
+      type: object
+      properties:
+        Value:
+          type: string
+security:
+  - basicAuth: []
+
+paths:
+  /client:
+    post:
+      summary: Create a client
+      description: Method for creating client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientSecret'
+    put:
+      summary: Update a client
+      description: Method for updating client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientWithSecret'
+      responses:
+        '201':
+          description: Updated
+    delete:
+      summary: Delete a client
+      description: Method for deleting client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientWithSecret'
+      responses:
+        '201':
+          description: Deleted
